@@ -23,7 +23,7 @@ setup(
     author_email="ryan@ryanliu6.xyz",
 
     description="A collection of semi-random, semi-useful Python scripts and CLI tools.",
-    long_description=read("README.rst"),
+    long_description=read("README.md"),
 
     packages=find_packages(exclude=('tests',)),
 
