@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 import os
-import git
 import argparse
 
 from pathlib import Path
 from typing import Optional
+from git import Repo, GitCommandError, InvalidGitRepositoryError
 
 
 def parse_args():
@@ -36,7 +36,8 @@ def process_request(root_dir: str, quiet: bool) -> None:
         git_repo = get_git_repo(current_path)
 
         if git_repo:
-            repo = git.Repo(current_path)
+            repo = Repo(current_path)
+            branch = repo.active_branch
             repo_path = repo.working_tree_dir
             repo_name = repo_path.split("/")[-1]
 
@@ -45,19 +46,26 @@ def process_request(root_dir: str, quiet: bool) -> None:
             else:
                 processed_repos.add(repo_name)
 
-            print("=======================================================================================")
-            if repo.is_dirty() or repo.untracked_files:
+            try:
+                upstream_commits = list(repo.iter_commits(f"{branch}@{{u}}..{branch}"))
+                unpushed_commits = len(upstream_commits) != 0
+            except GitCommandError:
+                unpushed_commits = False
+
+            if repo.is_dirty() or repo.untracked_files or unpushed_commits:
+                print("=======================================================================================")
                 print(f"Code changes in {repo_name} located at {repo_path}")
                 print(repo.git.status())
             else:
                 if quiet:
                     continue
                 else:
+                    print("=======================================================================================")
                     print(f"No changes in {repo_name} located at {repo_path}")
             print()
 
 
-def get_git_repo(path: str) -> Optional[git.Repo]:
+def get_git_repo(path: str) -> Optional[Repo]:
     """
     Returns a git.Repo object if path refers to a Git Repo, else,
     return None.
@@ -70,9 +78,9 @@ def get_git_repo(path: str) -> Optional[git.Repo]:
             path, or None.
     """
     try:
-        repo = git.Repo(path)
+        repo = Repo(path)
         return repo
-    except git.exc.InvalidGitRepositoryError:
+    except InvalidGitRepositoryError:
         return None
 
 
