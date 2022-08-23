@@ -9,7 +9,7 @@ MP4 = "mp4"
 
 @click.command()
 @click.argument("folder_path")
-@click.option("--force", help="Force generate NFO files", default=False)
+@click.option("--force/--no-force", help="Force generate NFO files", default=False)
 def generate_nfo_file(folder_path: str, force: bool):
     """
     Generates NFO file for movies.
