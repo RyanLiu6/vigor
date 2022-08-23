@@ -45,7 +45,7 @@ def _generate_helper(folder_path: str, force: bool):
                     _create_nfo_file(file_name=file_name, directory=current_path)
 
         for directory in current_directories:
-            _generate_helper(folder_path=directory)
+            _generate_helper(folder_path=directory, force=force)
 
 
 def _create_nfo_file(file_name: str, directory: str):
