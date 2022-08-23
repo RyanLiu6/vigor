@@ -9,7 +9,8 @@ MP4 = "mp4"
 
 @click.command()
 @click.argument("folder_path")
-def generate_nfo_file(folder_path: str):
+@click.option("--force", help="Force generate NFO files", default=False)
+def generate_nfo_file(folder_path: str, force: bool):
     """
     Generates NFO file for movies.
 
@@ -20,10 +21,10 @@ def generate_nfo_file(folder_path: str):
     Args:
         folder_path (str): Root directory to explore and create NFO files for.
     """
-    _generate_helper(folder_path=folder_path)
+    _generate_helper(folder_path=folder_path, force=force)
 
 
-def _generate_helper(folder_path: str):
+def _generate_helper(folder_path: str, force: bool):
     for item in os.walk(folder_path):
         # each item is 3-tuple of (dirpath, dirnames, filenames)
         current_path = item[0]
@@ -36,12 +37,15 @@ def _generate_helper(folder_path: str):
                 processed_files[file_name.replace(NFO, MP4)] = file_name
 
         for file_name in current_files:
-            if file_name.endswith(MP4) and file_name not in processed_files:
-                _create_nfo_file(file_name=file_name, directory=current_path)
+            if force:
+                if file_name.endswith(MP4):
+                    _create_nfo_file(file_name=file_name, directory=current_path)
+            else:
+                if file_name.endswith(MP4) and file_name not in processed_files:
+                    _create_nfo_file(file_name=file_name, directory=current_path)
 
         for directory in current_directories:
             _generate_helper(folder_path=directory)
-
 
 
 def _create_nfo_file(file_name: str, directory: str):
