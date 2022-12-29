@@ -19,17 +19,24 @@ def clean_directory(root_dir: str):
     root_path = Path(root_dir)
     files = [x for x in root_path.glob("**/*") if x.is_file()]
 
+    failed_folders = []
+
     for file_path in files:
         if file_path.suffix == ".nfo":
             continue
         else:
             new_folder = Path(root_path / file_path.stem)
-            Path.mkdir(new_folder)
-            file_path.rename(new_folder / file_path.name)
+            try:
+                Path.mkdir(new_folder)
+                file_path.rename(new_folder / file_path.name)
 
-            info_path = Path(root_path / f"{file_path.stem}.nfo")
-            if info_path.is_file:
-                info_path.rename(new_folder / info_path.name)
+                info_path = Path(root_path / f"{file_path.stem}.nfo")
+                if info_path.is_file:
+                    info_path.rename(new_folder / info_path.name)
+            except FileExistsError:
+                failed_folders.append(new_folder)
+
+    print(f"Failed folders: {failed_folders}")
 
 
 if __name__ == "__main__":
