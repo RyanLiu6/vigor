@@ -28,7 +28,8 @@ def clean_directory(root_dir: str):
             file_path.rename(new_folder / file_path.name)
 
             info_path = Path(root_path / f"{file_path.stem}.nfo")
-            info_path.rename(new_folder / info_path.name)
+            if info_path.is_file:
+                info_path.rename(new_folder / info_path.name)
 
 
 if __name__ == "__main__":
