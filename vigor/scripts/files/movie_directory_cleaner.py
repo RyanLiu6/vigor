@@ -17,7 +17,7 @@ def clean_directory(root_dir: str):
             inside root_dir.
     """
     root_path = Path(root_dir)
-    files = [x for x in root_path.glob("**/*") if x.is_file()]
+    files = [x for x in root_path.glob("*") if x.is_file()]
 
     failed_folders = []
 
