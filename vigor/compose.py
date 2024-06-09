@@ -11,7 +11,7 @@ class Compose(CommandRunner):
         return process.stdout
 
     def help(self) -> str:
-        params = ["help"]
+        params = ["--help"]
 
         return self.run(*params)
 
