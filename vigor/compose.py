@@ -1,5 +1,5 @@
 from typing import List
-from utils import CommandRunner
+from vigor.utils import CommandRunner
 
 
 class Compose(CommandRunner):
@@ -9,6 +9,11 @@ class Compose(CommandRunner):
 
         process = super().run(*params, capture_output=True)
         return process.stdout
+
+    def help(self) -> str:
+        params = ["help"]
+
+        return self.run(*params)
 
     def generate_compose_file(self, files: List[str], env: str=None) -> str:
         params = ["config"]
