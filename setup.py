@@ -15,14 +15,14 @@ def read(filename):
 
 setup(
     name="vigor",
-    version="0.1.2",
+    version="0.2.0",
     url="https://github.com/RyanLiu6/vigor",
     license='MIT',
 
     author="Ryan Liu",
     author_email="ryan@ryanliu6.xyz",
 
-    description="A collection of semi-random, semi-useful Python scripts and CLI tools.",
+    description="A collection of semi-random functions and scripts that I found useful for my own usage, packed into a Python library for ease-of-use.",
     long_description=read("README.md"),
 
     packages=find_packages(exclude=('tests',)),
@@ -34,9 +34,9 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
     ],
 )

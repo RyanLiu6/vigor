@@ -2,7 +2,7 @@
 vigor - A collection of semi-random, semi-useful Python scripts and CLI tools.
 """
 
-__version__ = '0.1.2'
+__version__ = '0.2.0'
 __author__ = 'Ryan Liu <ryan@ryanliu6.xyz>'
 
 """
