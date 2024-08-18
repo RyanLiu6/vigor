@@ -1,7 +1,7 @@
 # vigor
 
-<!-- [![pypi](https://img.shields.io/pypi/v/vigor.svg)](https://pypi.python.org/pypi/vigor)
-[![versions](https://img.shields.io/pypi/pyversions/vigor.svg)](https://github.com/ryanliu6/vigor) -->
+[![pypi](https://img.shields.io/pypi/v/vigor.svg)](https://pypi.python.org/pypi/vigor)
+[![versions](https://img.shields.io/pypi/pyversions/vigor.svg)](https://github.com/ryanliu6/vigor)
 [![license](https://img.shields.io/github/license/ryanliu6/vigor.svg)](https://github.com/ryanliu6/vigor/blob/main/LICENSE)
 
 A collection of semi-random functions and scripts that I found useful for my own usage, packed into a Python library for ease-of-use.
