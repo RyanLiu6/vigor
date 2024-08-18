@@ -15,7 +15,7 @@ def read(filename):
 
 setup(
     name="vigor",
-    version="0.2.0",
+    version="0.2.1",
     url="https://github.com/RyanLiu6/vigor",
     license='MIT',
 
