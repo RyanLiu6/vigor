@@ -1,15 +1,24 @@
 #!/usr/bin/env python
-import os
 import argparse
+import os
+from typing import Tuple
 
 
-def parse_args():
+def parse_args() -> Tuple[str, str, bool]:
     parser = argparse.ArgumentParser(description="File deleter")
-    parser.add_argument("input_file", help="A text file containing information to process.")
-    parser.add_argument("root_dir", help="Absolute path to root directory for deletion.")
-    parser.add_argument("--dry-run", action="store_true", default=False,
-                        help="If set, does not actually delete files and only prints out information \
-                             about files that would be deleted.")
+    parser.add_argument(
+        "input_file", help="A text file containing information to process."
+    )
+    parser.add_argument(
+        "root_dir", help="Absolute path to root directory for deletion."
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        default=False,
+        help="If set, does not actually delete files and only prints out information \
+                             about files that would be deleted.",
+    )
 
     args = parser.parse_args()
 
@@ -26,7 +35,7 @@ def process_request(input_file: str, root_dir: str, dry_run: bool) -> None:
         dry_run (bool): If True, will not remove any files.
     """
     to_delete = set()
-    with open(input_file, "r", encoding="utf-8") as read_file:
+    with open(input_file, encoding="utf-8") as read_file:
         for line in read_file:
             to_delete.add(line.strip())
 
@@ -43,8 +52,8 @@ def process_request(input_file: str, root_dir: str, dry_run: bool) -> None:
             print(f"Found files: {matching} in folder {current_path}")
 
             if not dry_run:
-                for item in matching:
-                    os.remove(os.path.join(current_path, item))
+                for match in matching:
+                    os.remove(os.path.join(current_path, match))
 
                 print(f"Removed files: {matching} from folder {current_path}")
 

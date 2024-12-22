@@ -1,19 +1,19 @@
 #!/usr/bin/env python
-import os
 import argparse
-
+import os
 from typing import List
 
 from hurry.filesize import size
 
 
-def parse_args():
+def parse_args() -> str:
     parser = argparse.ArgumentParser(description="Directory Explorer")
-    parser.add_argument("root_dir", help="Absolute path to root directory to explore.")
+    parser.add_argument(
+        "root_dir", help="Absolute path to root directory to explore.", type=str
+    )
 
     args = parser.parse_args()
-
-    return args
+    return str(args.root_dir)
 
 
 def process_request(root_dir: str) -> None:
@@ -60,4 +60,4 @@ def print_directory(directory_path: str, directory_files: List[str]) -> None:
 if __name__ == "__main__":
     args = parse_args()
 
-    process_request(args.root_dir)
+    process_request(*args)

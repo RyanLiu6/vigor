@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
 import os
-import click
 
+import click
 from pypdf import PdfWriter
 
 
 @click.command()
 @click.argument("pdf_dir")
 @click.option("--dry-run", is_flag=True, default=False, help="Dry Run")
-def combine_pdf(pdf_dir: str, dry_run: bool):
+def combine_pdf(pdf_dir: str, dry_run: bool) -> None:
     """
     Gathers all pdfs in `pdf_dir`, sorted by name, then merges them into
     a singular PDF, output to `pdf_dir` as well.

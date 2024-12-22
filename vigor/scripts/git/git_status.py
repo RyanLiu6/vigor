@@ -1,68 +1,93 @@
 #!/usr/bin/env python
 
-import os
 import argparse
-
+import os
+from os import PathLike
 from pathlib import Path
-from typing import Optional
-from git import Repo, GitCommandError, InvalidGitRepositoryError
+from typing import Optional, Tuple, Union
+
+from git import InvalidGitRepositoryError, Repo
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="Checks git status for all directories under root_dir")
-    parser.add_argument("--root_dir", default=Path.home(),
-                        help="Absolute path to root folder for checking.")
-    parser.add_argument("-q", "--quiet", action="store_true", default=False,
-                        help="Quiet mode, only prints out information for repos with changes.")
+def parse_args() -> Tuple[str, bool]:
+    parser = argparse.ArgumentParser(
+        description="Checks git status for all directories under root_dir"
+    )
+    parser.add_argument(
+        "--root_dir",
+        default=Path.home(),
+        help="Absolute path to root folder for checking.",
+    )
+    parser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        default=False,
+        help="Quiet mode, only prints out information for repos with changes.",
+    )
 
     args = parser.parse_args()
 
     return args.root_dir, args.quiet
 
 
-def process_request(root_dir: str, quiet: bool) -> None:
+def get_repo_name(repo_path: Union[str, PathLike[str]]) -> str:
     """
-    Processes CLI calls.
+    Get repository name from path.
 
     Args:
-        root_dir (str): Root directory to look for Git Repos for.
-        quiet (bool): If True, will not print on repos that have no changes.
-            Will not affect printing on repos that do have changes.
+        repo_path: Path to repository
+
+    Returns:
+        str: Repository name
     """
-    processed_repos = set()
-    for item in os.walk(root_dir):
-        # each item is 3-tuple of (dirpath, dirnames, filenames)
-        current_path = item[0]
-        git_repo = get_git_repo(current_path)
+    path_str = str(repo_path)  # Convert PathLike to str
+    return path_str.split(os.sep)[-1]
 
-        if git_repo:
-            repo = Repo(current_path)
-            branch = repo.active_branch
-            repo_path = repo.working_tree_dir
-            repo_name = repo_path.split("/")[-1]
 
-            if repo_name in processed_repos:
-                continue
-            else:
-                processed_repos.add(repo_name)
+def process_request(root_dir: Union[str, PathLike[str]], quiet: bool = False) -> None:
+    """
+    Process git status for all directories under root_dir.
 
-            try:
-                upstream_commits = list(repo.iter_commits(f"{branch}@{{u}}..{branch}"))
-                unpushed_commits = len(upstream_commits) != 0
-            except GitCommandError:
-                unpushed_commits = False
+    Args:
+        root_dir: Root directory to check
+        quiet: If True, only print repos with changes
+    """
+    if not os.path.exists(root_dir):
+        raise ValueError(f"Directory {root_dir} does not exist!")
 
-            if repo.is_dirty() or repo.untracked_files or unpushed_commits:
-                print("=======================================================================================")
-                print(f"Code changes in {repo_name} located at {repo_path}")
-                print(repo.git.status())
-            else:
-                if quiet:
-                    continue
+    for item in os.scandir(root_dir):
+        if not item.is_dir():
+            continue
+
+        try:
+            repo = Repo(item.path)
+            if not repo.bare:
+                repo_name = get_repo_name(item.path)
+                branch = repo.active_branch
+                repo_path = repo.working_tree_dir
+
+                if (
+                    repo.is_dirty()
+                    or repo.untracked_files
+                    or len(list(repo.iter_commits(f"{branch}@{{u}}..{branch}"))) != 0
+                ):
+                    print(
+                        "======================================================================================="
+                    )
+                    print(f"Code changes in {repo_name} located at {repo_path}")
+                    print(repo.git.status())
                 else:
-                    print("=======================================================================================")
-                    print(f"No changes in {repo_name} located at {repo_path}")
-            print()
+                    if quiet:
+                        continue
+                    else:
+                        print(
+                            "======================================================================================="
+                        )
+                        print(f"No changes in {repo_name} located at {repo_path}")
+                print()
+        except InvalidGitRepositoryError:
+            continue
 
 
 def get_git_repo(path: str) -> Optional[Repo]:

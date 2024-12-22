@@ -1,24 +1,31 @@
 #!/usr/bin/env python3
 
 import os
-import shutil
+from typing import List, Tuple
 
 import click
 
+to_delete: List[Tuple[str, str]] = []
 
-to_delete = []
 
 @click.command()
 @click.argument("root_dir")
 @click.option("--dry-run", is_flag=True, default=False, help="Dry Run")
-@click.option("-r", "--recursive", is_flag=True, default=False, help="Should recursively check sub-directories")
-def remove_empty_directories(root_dir: str, dry_run: bool, recursive: bool):
+@click.option(
+    "-r",
+    "--recursive",
+    is_flag=True,
+    default=False,
+    help="Should recursively check sub-directories",
+)
+def remove_empty_directories(root_dir: str, dry_run: bool, recursive: bool) -> None:
     """
-    Finds folders in root_dir that only contain an .nfo file, without a corresponding media file.
-    In this case, these folders are "empty", and should be removed.
+    Finds folders in root_dir that only contain an .nfo file, without a corresponding
+    media file. In this case, these folders are "empty", and should be removed.
 
     Args:
-        root_dir (str): Root Directory to scan. Only looks at first level subdirectories.
+        root_dir (str): Root Directory to scan. Only looks at first level
+        subdirectories.
     """
     inner_function(root_dir=root_dir, recursive=recursive)
 
@@ -30,7 +37,7 @@ def remove_empty_directories(root_dir: str, dry_run: bool, recursive: bool):
             os.rmdir(item[1])
 
 
-def inner_function(root_dir: str, recursive: bool):
+def inner_function(root_dir: str, recursive: bool) -> None:
     for path, subdir, files in os.walk(root_dir):
         if len(files) == 1 and ".nfo" in files[0]:
             to_delete.append((files[0], path))

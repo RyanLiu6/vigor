@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
-import click
-
 from pathlib import Path
+
+import click
 
 
 @click.command()
 @click.argument("root_dir")
 @click.argument("to_replace")
 @click.option("-mw", "magic_word", default="")
-def clean_file_names(root_dir: str, to_replace: str, magic_word: str):
+def clean_file_names(root_dir: str, to_replace: str, magic_word: str) -> None:
     """
     Replaces any instances of "to_replace" with "magic_word".
 
@@ -24,7 +24,9 @@ def clean_file_names(root_dir: str, to_replace: str, magic_word: str):
     for file_path in files:
         file_name = file_path.name
         if to_replace in file_name:
-            new_path = Path(file_path.parent / file_name.replace(to_replace, magic_word))
+            new_path = Path(
+                file_path.parent / file_name.replace(to_replace, magic_word)
+            )
             file_path.rename(new_path)
 
 

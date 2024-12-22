@@ -13,3 +13,4 @@ Currently there are two categories of scripts, one for files and one for Git rep
 
 ## Docker Compose
 One problem I encountered when creating [Focus](https://github.com/ryanliu6/focus) (docker containers that run on my own multi-media server), was that after separating individual services into subdirectories, generating a "main" or "aggregated" compose file was difficult with existing Docker Compose libraries. Thus, the compose module was born for the purpose of generating custom compose files based on selected services.
+****
